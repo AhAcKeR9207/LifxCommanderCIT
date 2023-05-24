@@ -79,7 +79,7 @@ public class Command {
 		int frameEnd = frame.getByteArray().length;
 		int frameAddressEnd = frame.getByteArray().length + frameAddress.getByteArray().length;
 		int protocolEnd = frame.getByteArray().length + frameAddress.getByteArray().length + protocol.getByteArray().length;
-		
+      
 		for(int i=0; i<frameEnd; i++) {
 			byteArray[i] = frame.getByteArray()[i];
 		}
@@ -96,6 +96,41 @@ public class Command {
 			 byteArray[i] = payload.getByteArray()[i - protocolEnd];
 		}
 		
+      System.out.print("commandByteArray: {");
+      for (int i = 0; i < byteArray.length; i++) {
+         System.out.print(byteArray[i] + ", ");
+      }
+      System.out.print("}");
+      System.out.println();
+      
+      System.out.print("frameByteArray: {");
+      for (int i = 0; i < frame.getByteArray().length; i++) {
+         System.out.print(frame.getByteArray()[i] + ", ");
+      }
+      System.out.print("}");
+      System.out.println();
+      
+      System.out.print("frameaddressByteArray: {");
+      for (int i = 0; i < frameAddress.getByteArray().length; i++) {
+         System.out.print(frameAddress.getByteArray()[i] + ", ");
+      }
+      System.out.print("}");
+      System.out.println();
+      
+      System.out.print("protocolByteArray: {");
+      for (int i = 0; i < protocol.getByteArray().length; i++) {
+         System.out.print(protocol.getByteArray()[i] + ", ");
+      }
+      System.out.print("}");
+      System.out.println();
+      
+      System.out.print("payloadByteArray: {");
+      for (int i = 0; i < payload.getByteArray().length; i++) {
+         System.out.print(payload.getByteArray()[i] + ", ");
+      }
+      System.out.print("}");
+      System.out.println();
+      
 		return byteArray;
 	}
 	

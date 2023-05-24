@@ -2,37 +2,45 @@ package src;
 
 import java.awt.Color;
 import java.io.IOException;
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 
-import src.DataTypes.*;
-import src.GUI.Components.*;
+import src.DataTypes.Command;
+import src.DataTypes.HSBK;
+import src.GUI.Components.ColorButton;
+import src.GUI.Components.LightPane;
+import src.GUI.Components.Slider;
+import src.GUI.Components.ToggleButton;
 import src.LifxCommander.ControlMethods;
-import src.Messages.Light.*;
+import src.Messages.Light.SetColor;
+import src.Messages.Light.SetPower_Light;
 
 public class Light extends ControlMethods {
    private JPanel panel;
-   private LightPane lightPane;
+   private LightPane lightPane = new LightPane(){};
    private String ip;
    private Color color;
    private double brightness;
    private int state;
    
    public Light(String ip, Color color) {
-      this.ip = ip;
-      this.color = color;
-      brightness = 1;
-      state = Constants.Power.ON;
-      
-      lightPane = new LightPane() {};
-      panel = new JPanel();
-      panel.add(lightPane);
-      panel.add(new ToggleButton(this));
-      panel.add(new Slider(this));
-      panel.add(new ColorButton(this));
-      panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-      updateColor();
-      updateState();
+      try {
+         this.ip = ip;
+         this.color = color;
+         brightness = 1;
+         state = Constants.Power.ON;
+         
+         panel = (ip != null) ? new JPanel() : null;
+         
+         panel.add(lightPane);
+         panel.add(new ToggleButton(this));
+         panel.add(new Slider(this));
+         panel.add(new ColorButton(this));
+         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+         
+         updateColor();
+         updateState();
+      } catch (Exception e) {}
    }
    
    public void setColor(Color color) {
@@ -46,57 +54,46 @@ public class Light extends ControlMethods {
    }
    
    public void setState(boolean state) {
-      if (state) {
-         this.state = Constants.Power.ON;
-      } else {
-         this.state = Constants.Power.OFF;
-      }
+      this.state = state ? Constants.Power.ON : Constants.Power.OFF;
       updateState();
    }
    
    public String getIP() {
-      return this.ip;
+      return ip;
    }
    
    public Color getColor() {
-      return this.color;
+      return color;
    }
-
+   
    public JPanel getPanel() {
-      return this.panel;
+      return panel;
    }
    
    public boolean getState() {
-      if (this.state == 0) {
-         return true;
-      }
-   
-      return false;
+      return state == 0;
    }
    
    private void updateColor() {
       try {
-         Color newColor = new Color(Math.max((int)(this.color.getRed() * brightness), 0),
-                                    Math.max((int)(this.color.getGreen() * brightness), 0),
-                                    Math.max((int)(this.color.getBlue() * brightness), 0));
-         this.lightPane.setBulbColor(newColor);
+         Color newColor = new Color(Math.max((int)(color.getRed() * brightness), 0), Math.max((int)(color.getGreen() * brightness), 0), Math.max((int)(color.getBlue() * brightness), 0));
+         lightPane.setBulbColor(newColor);
          
-         HSBK hsbk = HSBK.RGBtoHSBK(this.color);
-         hsbk.setBrightness((int) (this.brightness * 65535.0));
+         HSBK hsbk = HSBK.RGBtoHSBK(color);
+         hsbk.setBrightness((int) (brightness * 65535.0));
          SetColor updateColor = new SetColor(hsbk);
          Command updateCommand = new Command(updateColor);
-         sendUdpMessage(updateCommand.getByteArray(), this.ip, Constants.PORT);
-      } catch (IOException e) {}
-        catch (NullPointerException e) {}
+         sendUdpMessage(updateCommand.getByteArray(), ip, Constants.PORT);
+      } catch (IOException e) {} catch (NullPointerException e) {}
    }
    
    private void updateState() {
       try {
-         this.lightPane.setBulbColor(this.state != 0 ? this.color : Color.black);
-         SetPower_Light updatePower = new SetPower_Light(this.state);
+         lightPane.setBulbColor(state != 0 ? color : Color.black);
+         
+         SetPower_Light updatePower = new SetPower_Light(state);
          Command updatePowerCommand = new Command(updatePower);
-         sendUdpMessage(updatePowerCommand.getByteArray(), this.ip, Constants.PORT);
-      } catch (IOException e) {}
-        catch (NullPointerException e) {}
+         sendUdpMessage(updatePowerCommand.getByteArray(), ip, Constants.PORT);
+      } catch (IOException e) {} catch (NullPointerException e) {}
    }
 }
