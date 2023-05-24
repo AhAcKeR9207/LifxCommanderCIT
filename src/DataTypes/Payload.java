@@ -4,7 +4,6 @@ public class Payload {
 	int code = 0;
 	
 	public byte[] getByteArray() {
-		
 		return null;
 	}
 	

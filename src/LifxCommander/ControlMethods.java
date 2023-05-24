@@ -17,16 +17,14 @@ public class ControlMethods {
       while(interfaces.hasMoreElements()) {
          NetworkInterface networkInterface = interfaces.nextElement();
          
-         if(networkInterface.isLoopback() || !networkInterface.isUp()) {
-            continue;
-         }
-         
-         for(InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-            InetAddress broadcast = interfaceAddress.getBroadcast();
-            if(broadcast == null) continue;
-            
-            DatagramPacket packet = new DatagramPacket(messageByteArray, messageByteArray.length, broadcast, port);
-            socket.send(packet);
+         if(networkInterface.isUp() && !networkInterface.isLoopback()) {
+            for(InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+               InetAddress broadcast = interfaceAddress.getBroadcast();
+               if(broadcast != null) {
+                  DatagramPacket packet = new DatagramPacket(messageByteArray, messageByteArray.length, broadcast, port);
+                  socket.send(packet);
+               }
+            }
          }
       }
       socket.close();
@@ -34,8 +32,8 @@ public class ControlMethods {
    
    static public void sendUdpMessage(byte[] messageByteArray, String ipAddress, int port) throws IOException {
       InetAddress address = InetAddress.getByName(ipAddress);
-      DatagramPacket packet = new DatagramPacket(messageByteArray, messageByteArray.length, address, port);
       DatagramSocket socket = new DatagramSocket();
+      DatagramPacket packet = new DatagramPacket(messageByteArray, messageByteArray.length, address, port);
       socket.send(packet);
       socket.close();	
    }	

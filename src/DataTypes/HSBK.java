@@ -5,10 +5,10 @@ import java.awt.Color;
 import src.Constants;
 
 public class HSBK {
-	public int hue;			      // 16-Bits
-	public int saturation;		   // 16-Bits
-	public int brightness;  		// 16-Bits
-	public int kelvin;			   // 16-Bits
+	public int hue;
+	public int saturation;
+	public int brightness;
+	public int kelvin;
 	
 	public HSBK() {
 		hue = 0;
@@ -18,20 +18,12 @@ public class HSBK {
 	}
 	
 	public HSBK(int hue, int saturation, int brightness, int kelvin) {
-		this.hue = hue;               // EX: 43713.6777
-		this.saturation = saturation; // EX: 65535
-		this.brightness = brightness; // EX: 65535
-		this.kelvin = kelvin;         // EX: 4000
-	}
-	
-	public HSBK(HSBK hsbk) {
-		hue = hsbk.hue;
-      saturation = hsbk.saturation;
-		brightness = hsbk.brightness;
-		kelvin = hsbk.kelvin;
+		this.hue = hue;
+		this.saturation = saturation;
+		this.brightness = brightness;
+		this.kelvin = kelvin;
 	}
 
-	// Converts RGB color scheme to HSBK color scheme.
 	public static HSBK RGBtoHSBK (Color rgb) {
 		float[] hsb = Color.RGBtoHSB(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), null);
   

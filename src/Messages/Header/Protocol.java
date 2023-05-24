@@ -3,14 +3,14 @@ package src.Messages.Header;
 import src.LifxCommander.CommonMethods;
 
 public class Protocol {
-	long reserved1;				// 64-Bits
-	int type;					// 16-Bits
-	int reserved2;				// 16-Bits
+	long reserved1;
+	int type;
+	int reserved2;
 	
 	public Protocol() {
-		reserved1 = 0;			// Always = 0
+		reserved1 = 0;
 		type = 0;
-		reserved2 = 0;			// Always = 0
+		reserved2 = 0;
 	}
 	
 	public Protocol(long reserved1, int type, int reserved2) {
@@ -70,17 +70,5 @@ public class Protocol {
 		byteArray[11] = reserved2Bytes[1];
 		
 		return byteArray;
-	}
-	
-	public void setFromCommandByteArray(byte[] byteArray) {
-		String reserved1BinStr = "";
-		for(int i=31; i>23; i--) reserved1BinStr = reserved1BinStr.concat(CommonMethods.convertByteToBinaryString(byteArray[i]));
-		reserved1 = Long.parseLong(reserved1BinStr, 2);
-		
-		String typeBinStr = CommonMethods.convertByteToBinaryString(byteArray[33]).concat(CommonMethods.convertByteToBinaryString(byteArray[32]));
-		type = Integer.parseInt(typeBinStr, 2);
-		
-		String reserved2BinStr = CommonMethods.convertByteToBinaryString(byteArray[35]).concat(CommonMethods.convertByteToBinaryString(byteArray[34]));
-		reserved2 = Integer.parseInt(reserved2BinStr, 2);
 	}
 }

@@ -105,12 +105,10 @@ public class Frame {
 		
 		byte[] dataBytes = new byte[2];
 		String originBinStr = Integer.toBinaryString(0x04 | origin).substring(1);
-		String taggedBinStr; 
-		if(tagged == true)taggedBinStr = "1"; else taggedBinStr = "0";
-		String addressableBinStr;
-		if(addressable == true)addressableBinStr = "1"; else addressableBinStr = "0";
+		String taggedBinStr = tagged ? "1" : "0";
+		String addressableBinStr = addressable ? "1" : "0";
 		String protocolBinStr = Integer.toBinaryString(0x1000 | protocol).substring(1);
-		String dataBinStr = originBinStr.concat(taggedBinStr).concat(addressableBinStr).concat(protocolBinStr);
+		String dataBinStr = originBinStr + taggedBinStr + addressableBinStr + protocolBinStr;
 		dataBytes = CommonMethods.convertBinaryStringToLittleEndianByteArray(dataBinStr);
 		byteArray[2] = dataBytes[0];
 		byteArray[3] = dataBytes[1];
@@ -124,25 +122,5 @@ public class Frame {
 		byteArray[7] = sourceBytes[3];
 		
 		return byteArray;
-	}
-	
-	public void setFromCommandByteArray(byte[] byteArray) {
-		String sizeBinStr = CommonMethods.convertByteToBinaryString(byteArray[1]).concat(CommonMethods.convertByteToBinaryString(byteArray[0]));
-		size = Integer.parseInt(sizeBinStr,2);
-		
-		String dataBinStr = CommonMethods.convertByteToBinaryString(byteArray[3]).concat(CommonMethods.convertByteToBinaryString(byteArray[2]));
-		String originBinStr = dataBinStr.substring(0, 2);
-		origin = Integer.parseInt(originBinStr, 2);
-		
-		if(dataBinStr.charAt(2) == '1') tagged = true; else tagged = false;
-		if(dataBinStr.charAt(3) == '1') addressable = true; else addressable = false;
-		String protocolBinStr = dataBinStr.substring(4, 16);
-		protocol = Integer.parseInt(protocolBinStr, 2);
-		
-		String sourceBinStr = "";
-		for(int i=7; i>3; i--) {
-			sourceBinStr = sourceBinStr.concat(CommonMethods.convertByteToBinaryString(byteArray[i]));
-		}
-		source = Long.parseLong(sourceBinStr, 2);
 	}
 }

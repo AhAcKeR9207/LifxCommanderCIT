@@ -1,10 +1,9 @@
 package src.GUI;
 
-import java.awt.Color;
-import javax.swing.*;
-import javax.swing.border.*;
-
-import src.BroadcastLight;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class LifxGUI extends JFrame {
     public LifxGUI (JPanel broadcast, JPanel light1, JPanel light2, JPanel light3) throws NullPointerException {
